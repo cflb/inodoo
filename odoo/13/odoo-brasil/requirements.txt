@@ -1,0 +1,9 @@
+# dependencias que faltaram
+setuptools_rust
+rust
+
+
+
+signxml
+pytrustnfe3
+pysigep

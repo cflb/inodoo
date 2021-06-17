@@ -1,0 +1,19 @@
+language: python
+python:
+- '3.6'
+virtual_env:
+  system_site_packages: true
+install:
+- pip install --upgrade pip
+- pip install --upgrade setuptools
+- pip install requests pytest pytest-cov
+script: pytest --cov=iugu
+after_success: coveralls
+deploy:
+  provider: pypi
+  user: trustcode
+  password:
+    secure: dn2bRMsO0vBQhmi0q+7k1OeGypK+by7Gufw/cRxN68DQ3F3EXhUUOZsxPQnOaU4hws/A4BT2shkR2NIS4vn9OeKuBxScOZx9ph9wqIL9u3/04VxphkFHeNoZWDTloYFvxLl6ZJujbIfRfolUmJbqbnlb8a/x1aQwDiAC/SR0QWCA2abkodoOi3HuonKgh/I9VSM8xADj2fFFKNyYOzF6ZZKuMnjbrcj/LqLxqEZN3S1ZB+MVNPpVKUZRI2tft5sQJWzSLdnu0uFEaB3W/0bjswi5nYYiBefYTVqsWx2KZDFBz5XH/iA24UoGzfSOi6mZ5WkU3HsYZzroAQK6vjuEcV6CMbGml4qmjp7rQ/AZpotPexRYVRdKOzhvf6vKpaTqQ2Rp2BUDBr9kXsq3Em2+96z2C8sjKnegn8B7/VDMAAJcryozhxmqIrUNJaRl1Bjdq2E4WdAf1U4SI71FHZ680axById/cO2kvWZu4djPqCqVFLwiMsOMAJVmd++OcTMMnPwYmuw90uhoU4HtSk/p6GXHukZSiD6RcNxjeWizfB3ewlxCanlVC/syzfRNyrWWqz4d3fHhnQux5tvg4lo+KB0a6lVAsN/g3lahtgMhRqe5y3lrcUnHPTNeqVwl5Pgw7BeFG0f28mSyqmNUKiBY+/i+ZpBCrYfy0CebooUBefk=
+  on:
+    branch: master
+  distributions: "sdist bdist_wheel"

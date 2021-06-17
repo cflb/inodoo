@@ -1,0 +1,78 @@
+version: "3.1"
+
+networks:
+  odoo-net:
+    external: true
+
+services:
+  
+  ### Odoo Server (14) - Localizacao BR
+  odoo-server:
+    build: ./odoo/13
+    ports:
+      - 80:8069
+    depends_on:
+      - db_principal
+      - redis
+    links:
+      - db_principal:db_principal
+    environment:
+      - HOST=db_principal
+      - USER=postgres_user
+      - PASSWORD=postgres_password
+    networks:
+      - odoo-net 
+
+  ### PostgreSQL Container (MASTER) #
+  db_principal:
+    restart: always
+    build: ./db/db_principal
+    volumes:
+      - db_principal_vol:/var/lib/postgresql
+      - "/etc/localtime:/etc/localtime"
+    ports:
+      - "5434:5432"
+      - "5432:5434"
+    env_file:
+      - ./db/db_principal/.db_principal.env
+    networks:
+      - odoo-net
+
+  ### PostgreSQL Container (Secundário) #
+  db_secundario:
+    restart: always
+    build: ./db/db_secundario
+    volumes:
+      - db_secundario_vol:/var/lib/postgresql
+      - "/etc/localtime:/etc/localtime"
+    ports:
+      - "5435:5432"
+    links:
+      - db_principal:db_principal
+    env_file:
+      - ./db/db_secundario/.db_secundario.env
+    networks:
+      - odoo-net
+  
+  ### pgAdmin Container (Master) #######################################
+  pgadmin:
+    build: ./db/pgadmin
+    ports:
+      - "5051:5051"
+    env_file:
+      - ./db/pgadmin/.pg4.env
+    links:
+      - db_principal
+    networks:
+      - odoo-net
+
+  redis:
+    image: redis
+    networks:
+      - odoo-net
+
+volumes:
+  db_principal_vol:
+    driver: "local"
+  db_secundario_vol:
+    driver: "local"
